@@ -1,7 +1,7 @@
 import React,{useEffect,useState} from 'react'
 import { Fragment } from 'react';
-import '../App.css'
 import Web3 from 'web3'
+import '../App.css'; 
 
 const Empresa = () => {
     const [EthereumPrecio,setEthereumPrecio] = useState('')
@@ -15,6 +15,8 @@ const Empresa = () => {
         .then(response => response.json())
         .then(data => setEthereumPrecio(data.data[0].priceUsd));
         CargarWeb3();
+        document.body.style.backgroundColor = "#F5F5F5"
+
     }, [])
     
     const  CargarWeb3 = async ()=>{
@@ -40,7 +42,7 @@ const Empresa = () => {
         let params= [
             {
               from: accounts[0],
-              to: '0xc24101beF39F51DfBC75554f7Ee2F00c11B2a03F',
+              to: '0x2484004C6f03D8c746f3982164A897eB2C093fB6',
               gas: '0x76c0', // 30400
               gasPrice: '0x9184e72a000', // 10000000000000
               value: valorHexadecimal, // 2441406250
@@ -67,7 +69,7 @@ const Empresa = () => {
     return (
         
         <Fragment>
-                <div className="container">
+                <div className="container FormContainer">
                     <form autoComplete="off">
                         <div className="mb-3">
                             <label htmlFor="titulo" className="form-label" >Título de la tarea</label>
