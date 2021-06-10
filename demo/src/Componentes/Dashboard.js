@@ -8,6 +8,7 @@ const Dashboard = () => {
     const [cuenta,setcuenta] = useState(0)
     const [balance,setbalance] = useState(0)
     const [EthereumPrecio,setEthereumPrecio] = useState('')
+    const [transacciones,setTransacciones] = useState('')
 
     const ethereum= window.ethereum
     if(ethereum){
@@ -52,6 +53,32 @@ const Dashboard = () => {
         return formatter.format(monto); /* $2,500.00 */
     }
     
+    const HayTransaccion = (block) =>{
+        for(var j = 0; j < block.transactions.length; j++) {
+            if( block.transactions[j].to === "0x51aF34eB9FdeA6e1a906C7eeB11eD06C4A508782" ||  block.transactions[j].from === "0x51aF34eB9FdeA6e1a906C7eeB11eD06C4A508782" ){
+               return true;
+            }
+            return false;
+        }
+    }
+    const getTransactions = async()=>{
+        var n = await web3.eth.getBlockNumber();
+        var txs = [];
+        for(var i = 0; i <= n; i++) {
+            var block = await web3.eth.getBlock(i, true).then((result) => {
+                if( HayTransaccion(result)){
+                    txs.push(result.transactions);
+                }
+            })
+        }
+        console.log(txs.flat())
+        setTransacciones(txs)
+
+       
+    }
+
+
+
     if(typeof web3.eth === 'undefined'){
         return(
             <Fragment>
@@ -60,6 +87,7 @@ const Dashboard = () => {
         )
     }else{
         CargarCuentas();
+        //getTransactions();
         return (
             <Fragment>
                
@@ -71,11 +99,27 @@ const Dashboard = () => {
                             <h6> ≈ {formatMoney(balance*EthereumPrecio)} </h6>
     
                         </div>
-                        <div className="col-sm-4" >
+                        <div className="col-sm-3" >
+                            <label  className="form-label">Monto para pagos a estudiantes</label>
+                            <h6>{balance*0.95} ETH</h6>
+                            <h6> ≈ {formatMoney((balance*0.95)*EthereumPrecio)} </h6>
+                        </div>
+                        <div className="col-sm-3" >
+                            <label  className="form-label">Monto de ganancia de plataforma</label>
+                            <h6>{balance*0.05} ETH</h6>
+                            <h6> ≈ {formatMoney((balance*0.05)*EthereumPrecio)} </h6>
+                        </div>
+                        <div className="col-sm-3" >
                             <label  className="form-label">Precio de un Ethereum</label>
                             <h6>1 ETH = ${EthereumPrecio}</h6>
                         </div>
                     </div>
+                </div>
+                <h1 style={{"fontSize":"28px","marginLeft":"10%","marginBottom":"1%"}}>Pagos Realizados a nuestra cuenta</h1>
+                <div className="cardMaterial card w-75 " style={{"marginLeft":"10%","marginTop":"0px","padding":" 30px 30px 30px 30px"}} >
+                    <h1>gg</h1>
+                    <button  className="btn btn-dark" style={{"marginTop":"20px"}} onClick={()=>getTransactions()}>Crear</button>
+
                 </div>
             </Fragment>
         )
