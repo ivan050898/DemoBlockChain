@@ -5,7 +5,7 @@ import Web3 from 'web3'
 
 const Dashboard = () => {
     const [web3,setweb3] = useState(0)
-    const [cuenta,setcuenta] = useState(0)
+    const [cuenta,setcuenta] = useState('')
     const [balance,setbalance] = useState(0)
     const [EthereumPrecio,setEthereumPrecio] = useState('')
     const [transacciones,setTransacciones] = useState('')
@@ -23,6 +23,7 @@ const Dashboard = () => {
         .then(data => setEthereumPrecio(data.data[0].priceUsd));
         document.body.style.backgroundColor = "#F5F5F5"
         CargarWeb3();
+
       
     }, [])
     
@@ -42,7 +43,6 @@ const Dashboard = () => {
         setcuenta(accounts[0])
         const montoWei = await web3.eth.getBalance(accounts[0]);
         setbalance(parseFloat(web3.utils.fromWei(montoWei,"ether")).toFixed(2));
-
     }
    
     const formatMoney =(monto )=>{
@@ -55,7 +55,7 @@ const Dashboard = () => {
     
     const HayTransaccion = (block) =>{
         for(var j = 0; j < block.transactions.length; j++) {
-            if( block.transactions[j].to === "0x51aF34eB9FdeA6e1a906C7eeB11eD06C4A508782" ||  block.transactions[j].from === "0x51aF34eB9FdeA6e1a906C7eeB11eD06C4A508782" ){
+            if( block.transactions[j].to === "0x26F032271Ded9838dBe0c755086Dbd4FB98fa9a0" ||  block.transactions[j].from === "0x26F032271Ded9838dBe0c755086Dbd4FB98fa9a0" ){
                return true;
             }
             return false;
@@ -71,8 +71,7 @@ const Dashboard = () => {
                 }
             })
         }
-        console.log(txs.flat())
-        setTransacciones(txs)
+        setTransacciones(txs.flat().reverse())
 
        
     }
@@ -86,43 +85,74 @@ const Dashboard = () => {
             </Fragment>
         )
     }else{
-        CargarCuentas();
-        //getTransactions();
-        return (
-            <Fragment>
-               
-                <div className="cardMaterial card w-75 " style={{"marginLeft":"10%","marginTop":"5%","padding":" 30px 30px 30px 30px"}} >
-                    <div className="row" >
-                        <div className="col-sm-2">
-                            <label  className="form-label" >Monto Total de la billetera </label>
-                            <h6>{balance} ETH</h6>
-                            <h6> ≈ {formatMoney(balance*EthereumPrecio)} </h6>
-    
-                        </div>
-                        <div className="col-sm-3" >
-                            <label  className="form-label">Monto para pagos a estudiantes</label>
-                            <h6>{balance*0.95} ETH</h6>
-                            <h6> ≈ {formatMoney((balance*0.95)*EthereumPrecio)} </h6>
-                        </div>
-                        <div className="col-sm-3" >
-                            <label  className="form-label">Monto de ganancia de plataforma</label>
-                            <h6>{balance*0.05} ETH</h6>
-                            <h6> ≈ {formatMoney((balance*0.05)*EthereumPrecio)} </h6>
-                        </div>
-                        <div className="col-sm-3" >
-                            <label  className="form-label">Precio de un Ethereum</label>
-                            <h6>1 ETH = ${EthereumPrecio}</h6>
+        if(cuenta==='' && transacciones===''){
+            CargarCuentas();
+            getTransactions();
+            return(
+                <Fragment>
+                    <h1>Cargando..</h1>
+                </Fragment>
+            )
+        }else{
+            return (
+                <Fragment>
+                    <div className="cardMaterial card w-75 " style={{"marginLeft":"10%","marginTop":"5%","padding":" 30px 30px 30px 30px"}} >
+                        <div className="row" >
+                            <div className="col-sm-2">
+                                <label  className="form-label" >Monto Total de la billetera </label>
+                                <h6>{balance} ETH</h6>
+                                <h6> ≈ {formatMoney(balance*EthereumPrecio)} </h6>
+        
+                            </div>
+                            <div className="col-sm-3" >
+                                <label  className="form-label">Monto para pagos a estudiantes</label>
+                                <h6>{balance*0.95} ETH</h6>
+                                <h6> ≈ {formatMoney((balance*0.95)*EthereumPrecio)} </h6>
+                            </div>
+                            <div className="col-sm-3" >
+                                <label  className="form-label">Monto de ganancia de plataforma</label>
+                                <h6>{balance*0.05} ETH</h6>
+                                <h6> ≈ {formatMoney((balance*0.05)*EthereumPrecio)} </h6>
+                            </div>
+                            <div className="col-sm-3" >
+                                <label  className="form-label">Precio de un Ethereum</label>
+                                <h6>1 ETH = {formatMoney(EthereumPrecio)}</h6>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <h1 style={{"fontSize":"28px","marginLeft":"10%","marginBottom":"1%"}}>Pagos Realizados a nuestra cuenta</h1>
-                <div className="cardMaterial card w-75 " style={{"marginLeft":"10%","marginTop":"0px","padding":" 30px 30px 30px 30px"}} >
-                    <h1>gg</h1>
-                    <button  className="btn btn-dark" style={{"marginTop":"20px"}} onClick={()=>getTransactions()}>Crear</button>
+                    <h1 style={{"fontSize":"28px","marginLeft":"10%","marginBottom":"1%"}}>Pagos a la  cuenta</h1>
+                    {transacciones.length>0  && transacciones.map((item, index) => (
+                     <div className="cardMaterial card w-75 " style={{"marginLeft":"10%","marginTop":"0px","padding":" 30px 30px 30px 30px"}} key={index} >
+                        <div className="row" >
+                            <div className="col-sm-4" >
+                                <label  className="form-label">Dirección del remitente</label>
+                                <h6>{transacciones[index].from}</h6>
+                            </div>
+                            <div className="col-sm-4" >
+                                <label  className="form-label">Monto de la transacción</label>
+                                <h6>{web3.utils.fromWei(transacciones[0].value,"ether")} ETH</h6>
+                                <h6> ≈ {formatMoney((web3.utils.fromWei(transacciones[index].value,"ether")*EthereumPrecio))} </h6>
 
-                </div>
-            </Fragment>
-        )
+                            </div>
+                            <div className="col-sm-4" >
+                                <label  className="form-label">Hash del bloque</label>
+                                <h6>{transacciones[index].hash}</h6>
+                            </div>
+                        </div>
+                        <div className="row" style={{"marginTop":"20px"}} >
+                            <div className="col-sm-4" >
+                                <label  className="form-label">Número  del bloque</label>
+                                <h6>{transacciones[index].blockNumber}</h6>
+                            </div>
+                           
+                        </div>
+                    </div>
+                    ))}
+                </Fragment>
+            )
+
+        }
+       
 
     }
 

@@ -42,7 +42,7 @@ const Empresa = () => {
         let params= [
             {
               from: accounts[0],
-              to: '0x51aF34eB9FdeA6e1a906C7eeB11eD06C4A508782',
+              to: '0xfed8EAcf5e5D5ae38931d4A37a179e125958E6bb',
               gas: '0x76c0', // 30400
               gasPrice: '0x9184e72a000', // 10000000000000
               value: valorHexadecimal, // 2441406250
