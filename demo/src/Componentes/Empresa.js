@@ -31,6 +31,15 @@ const Empresa = () => {
           }
         }
     }
+       
+    const formatMoney =(monto )=>{
+        var formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+        });
+        return formatter.format(monto); /* $2,500.00 */
+    }
+    
 
     const CargarCuentas = async ()=>{
         var accounts = await web3.eth.getAccounts();
@@ -94,10 +103,15 @@ const Empresa = () => {
                             <div className="col-sm-3" >
                                 <label  className="form-label">Monto a pagar en Ethereum</label>
                                 <h6>{Oferta/EthereumPrecio} ETH</h6>
-                                <label  className="form-label">Comisión de la plataforma (5%):</label>
+                                <h6> ≈ {formatMoney((Oferta/EthereumPrecio)*EthereumPrecio)} </h6>
+
+                                <label  className="form-label" style={{"marginTop":"20px"}}>Comisión de la plataforma (5%):</label>
                                 <h6> {(Oferta/EthereumPrecio)*0.05} ETH</h6>
-                                <label  className="form-label">Total a pagar:</label>
+                                <h6> ≈ {formatMoney(((Oferta/EthereumPrecio)*0.05)*EthereumPrecio)} </h6>
+
+                                <label  className="form-label" style={{"marginTop":"20px"}}>Total a pagar:</label>
                                 <h6> {((Oferta/EthereumPrecio)*0.05)+(Oferta/EthereumPrecio)} ETH</h6>
+                                <h6> ≈ {formatMoney((((Oferta/EthereumPrecio)*0.05)+(Oferta/EthereumPrecio))*EthereumPrecio)} </h6>
 
                             </div>
                             <div className="col-sm-4" >
