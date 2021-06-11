@@ -1,7 +1,8 @@
 import React,{useEffect,useState} from 'react'
 import { Fragment } from 'react';
 import Web3 from 'web3'
- 
+import {WALLET} from './Wallet'
+
 
 const Dashboard = () => {
     const [web3,setweb3] = useState(0)
@@ -55,7 +56,7 @@ const Dashboard = () => {
     
     const HayTransaccion = (block) =>{
         for(var j = 0; j < block.transactions.length; j++) {
-            if( block.transactions[j].to === "0x26F032271Ded9838dBe0c755086Dbd4FB98fa9a0" ||  block.transactions[j].from === "0x26F032271Ded9838dBe0c755086Dbd4FB98fa9a0" ){
+            if( block.transactions[j].to === WALLET ||  block.transactions[j].from === WALLET ){
                return true;
             }
             return false;

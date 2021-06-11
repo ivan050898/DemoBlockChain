@@ -2,6 +2,7 @@ import React,{useEffect,useState} from 'react'
 import { Fragment } from 'react';
 import Web3 from 'web3'
 import '../App.css'; 
+import {WALLET} from './Wallet'
 
 const Empresa = () => {
     const [EthereumPrecio,setEthereumPrecio] = useState('')
@@ -42,7 +43,7 @@ const Empresa = () => {
         let params= [
             {
               from: accounts[0],
-              to: '0xfed8EAcf5e5D5ae38931d4A37a179e125958E6bb',
+              to: WALLET,
               gas: '0x76c0', // 30400
               gasPrice: '0x9184e72a000', // 10000000000000
               value: valorHexadecimal, // 2441406250

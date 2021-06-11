@@ -1,0 +1,1 @@
+export const WALLET= "0xfed8EAcf5e5D5ae38931d4A37a179e125958E6bb";
